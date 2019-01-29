@@ -20,7 +20,7 @@ oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi
 oc new-build  -D $'FROM docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11\nUSER root\nRUN yum -y install skopeo && yum clean all\nUSER 1001' --name=jenkins-agent-appdev -n ${GUID}-jenkins
 
 # Create pipeline build config pointing to the ${REPO} with contextDir `openshift-tasks`
-oc create -f - -n ${GUID}-jenkins <<'EOT'
+oc create -f - -n ${GUID}-jenkins <<EOT
 kind: "BuildConfig"
 apiVersion: "v1"
 metadata:
@@ -30,19 +30,18 @@ spec:
     contextDir: openshift-tasks/
     type: Git
     git:
-      uri: ${REPO}
+      uri: "${REPO}"
   strategy:
-    jenkinsPipelineStrategy:
-      jenkinsfile: <pipeline content from below>
     type: JenkinsPipeline
-  sourceStrategy:
-    env:
-      - name: GUID
-        value: ${GUID}
-      - name: REPO
-        value: ${REPO}
-      - name: CLUSTER
-        value: ${CLUSTER}
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+      env:
+        - name: GUID
+          value: ${GUID}
+        - name: REPO
+          value: ${REPO}
+        - name: CLUSTER
+          value: ${CLUSTER}
 EOT
 
 # Make sure that Jenkins is fully up and running before proceeding!
