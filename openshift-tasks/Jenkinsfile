@@ -86,7 +86,6 @@ podTemplate(
               }
             }
           }
-        }
       }
 
       // Deploy the built image to the Development Environment.
