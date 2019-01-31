@@ -178,6 +178,7 @@ podTemplate(
               while (rc_prod.spec.replicas != rc_prod.status.readyReplicas) {
                 sleep 5
                 rc_prod = openshift.selector("rc", "${destApp}-${dc_version}").object()
+              }
             }
          }
       }
