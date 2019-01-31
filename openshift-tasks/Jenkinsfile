@@ -136,6 +136,7 @@ podTemplate(
         openshift.withProject("${GUID}-tasks-dev") {
           openshift.tag("${GUID}-tasks-dev/tasks:${devTag}", "${GUID}-tasks-dev/tasks:${prodTag}")
           }
+       }
       }
 
       // Blue/Green Deployment into Production
