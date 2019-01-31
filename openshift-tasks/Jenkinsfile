@@ -100,7 +100,7 @@ podTemplate(
           // Update the Image on the Development Deployment Config
           openshift.withCluster() {
             openshift.withProject("${GUID}-tasks-dev") {
-              openshift.set("env", "dc/tasks",, "VERSION='${devTag} (tasks-dev)'")
+              openshift.set("env", "dc/tasks", "VERSION='${devTag} (tasks-dev)'")
               openshift.set("image", "dc/tasks", "tasks=docker-registry.default.svc:5000/${GUID}-tasks-dev/tasks:${devTag}")
     
               // Update the Config Map which contains the users for the Tasks application
@@ -164,6 +164,9 @@ podTemplate(
               dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${GUID}-tasks-dev/tasks:${prodTag}"
               openshift.apply(dc)
     
+              openshift.set("env", "dc/tasks-blue", "VERSION='${prodTag} (tasks-blue)'")
+              openshift.set("env", "dc/tasks-green", "VERSION='${prodTag} (tasks-green)'")
+
               // Update Config Map in change config files changed in the source
               openshift.selector("configmap", "${destApp}-config").delete()
               def configmap = openshift.create("configmap", "${destApp}-config", "--from-file=./configuration/application-users.properties", "--from-file=./configuration/application-roles.properties" )
